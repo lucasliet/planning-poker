@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planning Poker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <div id="app">
+    <header class="header">
+      <div class="logo"><span aria-hidden="true">♠</span> Planning Poker</div>
+      <div class="connection-pill">
+        <div class="dot offline" id="connDot" aria-hidden="true"></div>
+        <span id="connLabel">Offline</span>
+      </div>
+    </header>
+
+    <!-- LOBBY -->
+    <main id="lobby">
+      <div class="lobby">
+        <div class="cards-deco" aria-hidden="true">
+          <div class="card-deco">5</div>
+          <div class="card-deco">8</div>
+          <div class="card-deco">?</div>
+        </div>
+        <h1 class="lobby-title">Planning Poker</h1>
+        <p class="lobby-sub">Estimativas colaborativas em tempo real · sem registro</p>
+
+        <div class="lobby-options">
+          <div class="lobby-card">
+            <h2>Criar Sala</h2>
+            <p>Você será o host. Compartilhe o link com o time.</p>
+            <div class="field">
+              <label for="hostName">Seu nome</label>
+              <input type="text" id="hostName" placeholder="Ex: Lucas" maxlength="20" autocomplete="nickname" />
+            </div>
+            <p class="error-msg" id="hostError" role="alert"></p>
+            <button class="btn-primary" id="btnCreate">Criar Sala</button>
+          </div>
+
+          <div class="lobby-card">
+            <h2>Entrar na Sala</h2>
+            <p>Use o link compartilhado ou cole o código abaixo.</p>
+            <div class="field">
+              <label for="guestName">Seu nome</label>
+              <input type="text" id="guestName" placeholder="Ex: Ana" maxlength="20" autocomplete="nickname" />
+            </div>
+            <div class="field">
+              <label for="roomCode">Código da sala</label>
+              <input type="text" id="roomCode" placeholder="ABC123" maxlength="20" style="text-transform:uppercase" autocomplete="off" />
+            </div>
+            <p class="error-msg" id="joinError" role="alert"></p>
+            <button class="btn-primary" id="btnJoin">Entrar</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ROOM -->
+    <section id="room" class="room" aria-label="Sala de planning" hidden>
+      <div class="room-header">
+        <div class="room-info">
+          <div class="room-title" id="roomTitle">Planning Poker</div>
+          <div class="room-session" id="roomSession"></div>
+        </div>
+        <div class="room-actions">
+          <span class="role-badge" id="roleBadge">HOST</span>
+          <button class="btn-secondary" id="btnNewRound">Nova Rodada</button>
+          <button class="btn-primary" id="btnReveal" disabled>Revelar Cartas</button>
+        </div>
+      </div>
+
+      <div class="issue-bar">
+        <span class="issue-label">Estimando</span>
+        <input
+          class="issue-input"
+          id="issueInput"
+          placeholder="Descreva a tarefa, história ou ticket a estimar..."
+          maxlength="200"
+          aria-label="Descrição do item sendo estimado"
+        />
+      </div>
+
+      <div class="share-area">
+        <span class="share-label">Link da sala:</span>
+        <span class="share-code" id="shareLink" title="Clique para copiar o link" role="button" tabindex="0" aria-label="Link da sala, clique para copiar"></span>
+        <button class="btn-copy" id="btnCopyLink" aria-label="Copiar link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Copiar link
+        </button>
+      </div>
+
+      <div class="table-area" role="region" aria-label="Mesa de planning">
+        <div class="table-center">
+          <div class="vote-status" id="voteStatus">Aguardando votos...</div>
+          <div class="vote-count" id="voteCount" aria-live="polite">0 / 0</div>
+        </div>
+        <div class="players-grid" id="playersGrid" role="list" aria-label="Participantes"></div>
+      </div>
+
+      <div class="results-area" id="resultsArea" aria-live="polite" hidden>
+        <div class="results-title">♦ Resultado da Rodada</div>
+        <div class="results-grid" id="resultsGrid"></div>
+        <div class="votes-breakdown" id="votesBreakdown"></div>
+      </div>
+
+      <div class="hand-area" id="handArea">
+        <div class="hand-label">Sua mão — clique para votar</div>
+        <div class="hand-cards" id="handCards" role="group" aria-label="Cartas disponíveis para votar"></div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/peer.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
